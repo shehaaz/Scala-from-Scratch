@@ -29,6 +29,7 @@ Summarizing the major books on the language
 #### Advanced Typing
 
 ## 3. Effective AKKA
+[Getting started Scala and Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html)
 
 ## 4. Functional Programming in Scala
 [This](https://github.com/fpinscala/fpinscala) repository contains exercises, hints, and answers for the book
