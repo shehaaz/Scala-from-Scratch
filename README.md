@@ -30,6 +30,7 @@ Summarizing the major books on the language
 
 ## 3. Effective AKKA
 [Getting started Scala and Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html)
+
 [Concurrency and Fault Tolerance Made Easy: An Akka Tutorial with Examples](https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka)
 
 ## 4. Functional Programming in Scala
