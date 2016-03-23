@@ -29,6 +29,7 @@ Summarizing the major books on the language
 #### Advanced Typing
 
 ## 3. Effective AKKA
+[HelloWorld example](https://github.com/shehaaz/Scala-from-Scratch/tree/master/akka/Akka/src/main/scala/helloworld)
 [Getting started Scala and Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html)
 
 [Concurrency and Fault Tolerance Made Easy: An Akka Tutorial with Examples](https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka)
