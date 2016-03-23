@@ -60,8 +60,10 @@ object Sample extends App {
   import akka.dispatch.ExecutionContexts._
 
   override def main(args: Array[String]) {
+    //Fixing bug from original code: https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka#comment-1776147740
     implicit val ec = global
     val system = ActorSystem("System")
+    //Load from /resources folder: http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
     val stream : InputStream = getClass.getResourceAsStream("/text.txt")
     val actor = system.actorOf(Props(new WordCounterActor(stream)))
     implicit val timeout = Timeout(25 seconds)
