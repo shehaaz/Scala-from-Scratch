@@ -29,7 +29,9 @@ Summarizing the major books on the language
 #### Advanced Typing
 
 ## 3. Effective AKKA
-[HelloWorld example](https://github.com/shehaaz/Scala-from-Scratch/blob/master/akka/Akka/src/main/scala/helloworld/HelloWorld.scala)
+[HelloWorld example](https://github.com/shehaaz/Scala-from-Scratch/blob/master/akka/Akka/src/main/scala/helloworld/HelloWorld.scala) + [Article](http://alvinalexander.com/scala/simple-scala-akka-actor-examples-hello-world-actors)
+
+[Ping Pong example](https://github.com/shehaaz/Scala-from-Scratch/blob/master/akka/Akka/src/main/scala/pingpong/pingpong.scala) + [Article](http://alvinalexander.com/scala/scala-akka-actors-ping-pong-simple-example)
 
 [Getting started Scala and Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html)
 
