@@ -33,12 +33,6 @@ Summarizing the major books on the language
 
 [Concurrency and Fault Tolerance Made Easy: An Akka Tutorial with Examples](https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka)
 
-
-
-## 4. Functional Programming in Scala
-[This](https://github.com/fpinscala/fpinscala) repository contains exercises, hints, and answers for the book
-[Functional Programming in Scala](http://manning.com/bjarnason/)
-
 What is an Actor in Akka?
 An actor is essentially nothing more than an object that receives messages and takes actions. 
 It is decoupled from the source of the message and its only responsibility is to recognize the type of message and take action accordingly.
@@ -49,6 +43,11 @@ What type of actions?
 * Instantiate a new actor and forward the message to it
 
 [Akka Demo: count words from text file](https://github.com/shehaaz/Scala-from-Scratch/blob/master/akka/Akka/src/main/scala/AkkaDemo.scala)
+
+
+## 4. Functional Programming in Scala
+[This](https://github.com/fpinscala/fpinscala) repository contains exercises, hints, and answers for the book
+[Functional Programming in Scala](http://manning.com/bjarnason/)
 
 ## 5. Scala for the impatient
 The apply method is the scala version of a constructor
