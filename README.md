@@ -48,6 +48,8 @@ What type of actions?
 * Forward the message, or a derived message, to another actor
 * Instantiate a new actor and forward the message to it
 
+[Akka Demo: count words from text file](https://github.com/shehaaz/Scala-from-Scratch/blob/master/akka/Akka/src/main/scala/AkkaDemo.scala)
+
 ## 5. Scala for the impatient
 The apply method is the scala version of a constructor
 e.g in the class StringOps
