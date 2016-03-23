@@ -29,7 +29,7 @@ Summarizing the major books on the language
 #### Advanced Typing
 
 ## 3. Effective AKKA
-[HelloWorld example](https://github.com/shehaaz/Scala-from-Scratch/tree/master/akka/Akka/src/main/scala/helloworld)
+[HelloWorld example](https://github.com/shehaaz/Scala-from-Scratch/blob/master/akka/Akka/src/main/scala/helloworld/HelloWorld.scala)
 
 [Getting started Scala and Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html)
 
