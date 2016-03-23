@@ -1,0 +1,1 @@
+Akka ensures that each instance of an actor runs in its own lightweight thread and that messages are processed one at a time. In this way, each actor's state can be reliably maintained without the developer needing to explicitly worry about synchronization or race conditions.
