@@ -32,8 +32,7 @@ class WordCounterActor(stream: InputStream) extends Actor {
       } else {
         running = true
         fileSender = Some(sender) // save reference to process invoker
-        import scala.io.Source._
-        val lines = fromInputStream(stream)
+        val lines = scala.io.Source.fromInputStream(stream)
         lines.getLines.foreach { line =>
           System.out.println(line)
           context.actorOf(Props[StringCounterActor]) ! ProcessStringMsg(line)
