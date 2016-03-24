@@ -70,6 +70,7 @@ What type of actions?
 
 [Akka Demo: count words from text file](https://github.com/shehaaz/Scala-from-Scratch/blob/master/akka/Akka/src/main/scala/AkkaDemo.scala)
 
+[Reactive Messaging Patterns explained](https://github.com/shehaaz/Scala-from-Scratch/tree/master/akka/Akka/src/main/scala/reactivemessagingpatterns)
 
 ## 4. Functional Programming in Scala
 [This](https://github.com/fpinscala/fpinscala) repository contains exercises, hints, and answers for the book
