@@ -26,6 +26,24 @@ Summarizing the major books on the language
 ### Part 2. Object-Oriented Scala
 #### Classes
 #### Objects, Case Classes, and Traits
+
+Case classes are used to conveniently store and match on the contents of a class. 
+You can contruct them without using new
+
+`scala> case class Cars(brand: String, model: String)`
+`defined class Cars`
+
+`scala> val tesla1 = Cars("Tesla", "Model-S")`
+`tesla1: Cars = Cars(Tesla,Model-S)`
+
+Case classes automatically have equality
+
+`scala> val tesla2 = Cars("Tesla", "Model-S")`
+`tesla2: Cars = Cars(Tesla,Model-S)`
+
+`scala> tesla1 == tesla2`
+`res0: Boolean = true`
+
 #### Advanced Typing
 
 ## 3. Effective AKKA
