@@ -23,6 +23,6 @@ project/plugins/project/
 .worksheet
 
 #Intellij
-*/target/*
-*/.idea/*
+**/target/*
+**/.idea/*
 
