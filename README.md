@@ -3,7 +3,7 @@ Summarizing the major books on the language
 
 ## 0. Programming in Scala 2nd Edition
 
-* Code written in the IntelliJ Scala Worksheet
+* [Code written in the IntelliJ Scala Worksheet](https://github.com/shehaaz/Scala-from-Scratch/tree/master/scala_playground)
 
 ## 1. Scala in Action
 
