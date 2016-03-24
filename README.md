@@ -1,6 +1,10 @@
 # Scala from Scratch
 Summarizing the major books on the language
 
+## 0. Programming in Scala 2nd Edition
+
+* Code written in the IntelliJ Scala Worksheet
+
 ## 1. Scala in Action
 
 ### Part 1 Scala: The Basics
