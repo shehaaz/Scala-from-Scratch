@@ -85,3 +85,13 @@ e.g in the class StringOps
 `def apply(n: Int): Char`
 `"Hello".apply(4) == "o"`
 `"Hello"(4) == "o"`
+
+`An upper type bound T <: A declares that type variable T refers to a subtype or equal to type A`
+
+`The lower-bound operator T >: A, restricting types to those that are equal to or are extended by the given type T.`
+
+example in [Scala Option class](https://github.com/scala/scala/blob/5cb3d4ec14488ce2fc5a1cc8ebdd12845859c57d/src/library/scala/Option.scala#L120):
+
+	`final def getOrElse[B >: A](default: => B): B = if (isEmpty) default else this.get`
+
+
