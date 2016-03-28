@@ -7,6 +7,8 @@ Summarizing the major books on the language
 * Scala Options Explained
 
 	[![Alt text for your video](http://img.youtube.com/vi/6Pd-1a3-Loc/0.jpg)](https://youtu.be/6Pd-1a3-Loc)
+* [Scala Futures](http://doc.akka.io/docs/akka/2.4.2/scala/futures.html): In the Scala Standard Library, a Future is a data structure used to retrieve the result of some concurrent operation. This result can be accessed synchronously (blocking) or asynchronously (non-blocking). I will be focusing on the non-blocking futures.
+ 
 
 ## 1. Scala in Action
 
