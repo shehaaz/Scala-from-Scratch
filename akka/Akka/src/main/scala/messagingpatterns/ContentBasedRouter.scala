@@ -1,4 +1,4 @@
-package reactivemessagingpatterns
+package messagingpatterns
 
 import scala.collection.Map
 import akka.actor._

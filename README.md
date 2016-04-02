@@ -62,6 +62,8 @@ Case classes automatically have equality
 
 [Getting started Scala and Akka](http://doc.akka.io/docs/akka/2.0/intro/getting-started-first-scala.html)
 
+[Tutorial: Asynchronous Programming With Akka Actors](https://jaxenter.com/tutorial-asynchronous-programming-with-akka-actors-105682.html)
+
 [Concurrency and Fault Tolerance Made Easy: An Akka Tutorial with Examples](https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka)
 
 What is an Actor in Akka?

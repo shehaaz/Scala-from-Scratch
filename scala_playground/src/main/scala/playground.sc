@@ -1,3 +1,17 @@
+/**
+  * A Trait is like an interface in Java, but like in Java 8 you can implement functions
+  */
+
+
+  /**
+    * Scala programmers “mix in” traits rather than inherit from them,
+    * because mixing in a trait has important differences from the multiple inheritance found in many other languages.
+    *
+    * Once a trait is defined, it can be mixed in to a class using either the "extends" or "with" keywords.
+    *
+    * Methods inherited from a trait can be used just like meth- ods inherited from a superclass.
+    */
+
 trait Philosophical {
   def philosophize(): Unit = {
     println("I consume memory, therefore I am!")
@@ -29,7 +43,6 @@ class Frog_Animal extends Animal with Philosophical with HasLegs {
 
 val frogAnimal : Frog_Animal = new Frog_Animal
 frogAnimal.philosophize()
-//-------------//
 
 /**
   * Option Collections
@@ -69,6 +82,7 @@ val value_illegal:Any = illegal.getOrElse("You Divided by Zero Yo");
 
 val odds = List(1, 3, 5)
 //odds: List[Int] = List(1, 3, 5)
+
 /**
   * headOption, which returns the head element wrapped in an Option,
   * ensuring that it will work even on empty lists.
