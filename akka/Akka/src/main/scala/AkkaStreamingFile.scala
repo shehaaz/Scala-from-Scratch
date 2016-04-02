@@ -17,7 +17,8 @@ class StringCounterActor extends Actor {
             wordsInLine = string.split(" ").length
           }
         try {
-          listener ! CaptureStream(fileName, wordsInLine, lineNumber, false)
+          val OnComplete = false
+          listener ! CaptureStream(fileName, wordsInLine, lineNumber, OnComplete)
           sender ! StringProcessedMsg(wordsInLine, fileSender)
         }
         catch {
@@ -62,7 +63,8 @@ class WordCounterActor(fileRef: FileReference, listener: ActorRef) extends Actor
 
       if (linesProcessed == totalLines) {
         val stopTime = System.nanoTime()
-        listener ! CaptureStream(fileName, totalNumOfWords, totalLines, true)
+        val OnComplete = true
+        listener ! CaptureStream(fileName, totalNumOfWords, totalLines, OnComplete)
         fileSender match {
           case (Some(o)) => o ! new ProcessedFile(fileName, totalNumOfWords, stopTime-startTime, true) // provide result to process invoker
         }
@@ -82,6 +84,8 @@ object Sample extends App {
   override def main(args: Array[String]) {
     //Fixing bug from original code: https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka#comment-1776147740
     implicit val ec = global
+
+    //Simulating two calls one to read Book.txt and another to read Text.txt
 
     val bookSystem = ActorSystem("BookSystem")
     // create the result listener, which will print the result and shutdown the system
