@@ -6,7 +6,10 @@ case class ProcessStringMsg(lineNumber: Int, fileName: String, string: String, f
 case class StringProcessedMsg(words: Integer, fileSender: Option[ActorRef])
 case class FileReference(fileName: String, stream: InputStream)
 case class ProcessedFile(fileName: String, totalNumWords: Int, timeElapsed: Long, onCompleteSignal: Boolean)
-case class CaptureStream(fileName: String, numOfWords: Int, lineNumber: Int, onCompleteSignal: Boolean)
+case class CaptureStream(fileName: String, numOfWords: Int, lineNumber: Int)
+case class closeStream(totalTime: Long, fileName: String)
+case class StartProcessFileMsg()
+
 
 class StringCounterActor extends Actor {
   def receive = {
@@ -16,22 +19,22 @@ class StringCounterActor extends Actor {
           {
             wordsInLine = string.split(" ").length
           }
-        try {
-          val OnComplete = false
-          listener ! CaptureStream(fileName, wordsInLine, lineNumber, OnComplete)
-          sender ! StringProcessedMsg(wordsInLine, fileSender)
-        }
-        catch {
-          case e: Exception =>
-            sender ! akka.actor.Status.Failure(e)
-            throw e
-        }
+
+          try {
+            listener ! CaptureStream(fileName, wordsInLine, lineNumber)
+            sender ! StringProcessedMsg(wordsInLine, fileSender)
+          }
+          catch {
+            case e: Exception =>
+              sender ! akka.actor.Status.Failure(e)
+              throw e
+          }
     }
     case _ => println("Error: message not recognized")
   }
 }
 
-case class StartProcessFileMsg()
+
 
 class WordCounterActor(fileRef: FileReference, listener: ActorRef) extends Actor {
 
@@ -39,8 +42,8 @@ class WordCounterActor(fileRef: FileReference, listener: ActorRef) extends Actor
   private var totalLines = 0
   private var linesProcessed = 0
   private val fileName = fileRef.fileName
-  private var startTime = 0L
   private var totalNumOfWords = 0
+  private var startTime = 0L
 
   def receive = {
     case StartProcessFileMsg() => {
@@ -64,7 +67,7 @@ class WordCounterActor(fileRef: FileReference, listener: ActorRef) extends Actor
       if (linesProcessed == totalLines) {
         val stopTime = System.nanoTime()
         val OnComplete = true
-        listener ! CaptureStream(fileName, totalNumOfWords, totalLines, OnComplete)
+        listener ! closeStream(stopTime-startTime, fileName)
         fileSender match {
           case (Some(o)) => o ! new ProcessedFile(fileName, totalNumOfWords, stopTime-startTime, true) // provide result to process invoker
         }
@@ -93,7 +96,7 @@ object Sample extends App {
     //Load from /resources folder: http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
     val bookStream : InputStream = getClass.getResourceAsStream("/book.txt")
     val bookActor = bookSystem.actorOf(Props(new WordCounterActor(new FileReference("book.txt", bookStream), bookListener)))
-    implicit val timeout = Timeout(1 seconds)
+    implicit val timeout = Timeout(5 seconds)
     val futurebook = bookActor ? StartProcessFileMsg()
     futurebook.map { result =>
       println("Elapsed time: " + result.asInstanceOf[ProcessedFile].timeElapsed / 1000000 + "ms. " +
@@ -124,15 +127,16 @@ object Sample extends App {
   }
 
   class Listener extends Actor {
+    private var totalNumberOfWords = 0
+
     def receive = {
 
-      case CaptureStream(fileName, numOfWords, lineNumber, onCompleteSignal) =>
-                            if(!onCompleteSignal){
-                              println(fileName + " " + "L." + lineNumber + " " + numOfWords)
-                            }
-                            else{
-                              println("Stream Complete " + fileName)
-                            }
+      case CaptureStream(fileName, numOfWords, lineNumber) =>
+                            totalNumberOfWords += numOfWords
+                            //println(fileName + " " + "L." + lineNumber + " " + numOfWords)
+
+      case closeStream(totalTime, fileName) =>
+              println("Stream Complete: " + fileName + " Total Number of Words: " + totalNumberOfWords + " Total Time: " + totalTime/1000000 + "ms")
 
       case _ => println("Error: message not recognized")
     }
