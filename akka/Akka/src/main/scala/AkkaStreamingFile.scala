@@ -1,11 +1,11 @@
 import java.io.InputStream
+import java.io.File
 
-import akka.actor.{ Actor, ActorRef, Props, ActorSystem }
+import akka.actor._
 
 case class ProcessStringMsg(lineNumber: Int, fileName: String, string: String, fileSender: Option[ActorRef], listener: ActorRef)
-case class StringProcessedMsg(words: Integer, fileSender: Option[ActorRef])
+case class StringProcessedMsg(fileSender: Option[ActorRef])
 case class FileReference(fileName: String, stream: InputStream)
-case class ProcessedFile(fileName: String, totalNumWords: Int, timeElapsed: Long, onCompleteSignal: Boolean)
 case class CaptureStream(fileName: String, numOfWords: Int, lineNumber: Int)
 case class closeStream(totalTime: Long, fileName: String)
 case class StartProcessFileMsg()
@@ -22,7 +22,7 @@ class StringCounterActor extends Actor {
 
           try {
             listener ! CaptureStream(fileName, wordsInLine, lineNumber)
-            sender ! StringProcessedMsg(wordsInLine, fileSender)
+            sender ! StringProcessedMsg(fileSender)
           }
           catch {
             case e: Exception =>
@@ -60,16 +60,14 @@ class WordCounterActor(fileRef: FileReference, listener: ActorRef) extends Actor
         }
       }
     }
-    case StringProcessedMsg(wordsInLine, fileSender) => {
-      totalNumOfWords += wordsInLine
+    case StringProcessedMsg(fileSender) => {
       linesProcessed += 1
 
       if (linesProcessed == totalLines) {
         val stopTime = System.nanoTime()
-        val OnComplete = true
         listener ! closeStream(stopTime-startTime, fileName)
         fileSender match {
-          case (Some(o)) => o ! new ProcessedFile(fileName, totalNumOfWords, stopTime-startTime, true) // provide result to process invoker
+          case (Some(o)) => o ! linesProcessed // provide result to process invoker
         }
       }
     }
@@ -85,60 +83,60 @@ object Sample extends App {
   import akka.dispatch.ExecutionContexts._
 
   override def main(args: Array[String]) {
-    //Fixing bug from original code: https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka#comment-1776147740
-    implicit val ec = global
 
-    //Simulating two calls one to read Book.txt and another to read Text.txt
+    val files = getListOfFiles("src/main/resources/")
 
-    val bookSystem = ActorSystem("BookSystem")
-    // create the result listener, which will print the result and shutdown the system
-    val bookListener = bookSystem.actorOf(Props[Listener], name = "bookListener")
-    //Load from /resources folder: http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
-    val bookStream : InputStream = getClass.getResourceAsStream("/book.txt")
-    val bookActor = bookSystem.actorOf(Props(new WordCounterActor(new FileReference("book.txt", bookStream), bookListener)))
-    implicit val timeout = Timeout(5 seconds)
-    val futurebook = bookActor ? StartProcessFileMsg()
-    futurebook.map { result =>
-      println("Elapsed time: " + result.asInstanceOf[ProcessedFile].timeElapsed / 1000000 + "ms. " +
-        "FileName " + result.asInstanceOf[ProcessedFile].fileName +
-        ". Total number of words " + result.asInstanceOf[ProcessedFile].totalNumWords)
+    /**
+      * foreach takes a procedure -- a function with a result type Unit -- as the right operand.
+      * It simply applies the procedure to each List element.
+      * The result of the operation is again Unit; no list of results is assembled.
+      */
+    files.foreach(initActorSystem)
 
-      if(result.asInstanceOf[ProcessedFile].onCompleteSignal){
-        //Terminate Actor System
-        bookSystem.terminate()
+    }
+
+    def initActorSystem(fileName: String): Unit = {
+      //Fixing bug from original code: https://www.toptal.com/scala/concurrency-and-fault-tolerance-made-easy-an-intro-to-akka#comment-1776147740
+      implicit val executionContext = global
+      val system = ActorSystem("ActorSystem")
+      // create the result listener, which will print the result
+      val listener = system.actorOf(Props[Listener], name = "Listener")
+      //Load from /resources folder: http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
+      val stream : InputStream = getClass.getResourceAsStream("/" + fileName)
+      val actor = system.actorOf(Props(new WordCounterActor(new FileReference(fileName, stream), listener)))
+      implicit val timeout = Timeout(5 seconds)
+      //When the future returns the OnCompleteSignal is sent
+      val futureResult = actor ? StartProcessFileMsg()
+      futureResult.map { result =>
+                          println("Number of lines processed in " + fileName + ": " + result)
+                          //Terminate Actor System when result is received
+                          system.terminate()
+                        }
+
+    }
+
+    def getListOfFiles(dir: String):List[String] = {
+      val d = new File(dir)
+      if (d.exists && d.isDirectory) {
+        d.listFiles.map(file => file.getName).toList
+      } else {
+        List[String]()
       }
     }
+}
 
-    val textSystem = ActorSystem("TextSystem")
-    // create the result listener, which will print the result and shutdown the system
-    val textListener = textSystem.actorOf(Props[Listener], name = "textListener")
-    val textStream : InputStream = getClass.getResourceAsStream("/text.txt")
-    val textActor = textSystem.actorOf(Props(new WordCounterActor(new FileReference("text.txt", textStream), textListener)))
-    val futuretext = textActor ? StartProcessFileMsg()
-    futuretext.map { result =>
-      println("Elapsed time: " + result.asInstanceOf[ProcessedFile].timeElapsed / 1000000 + "ms. " +
-              "FileName " + result.asInstanceOf[ProcessedFile].fileName +
-              ". Total number of words " + result.asInstanceOf[ProcessedFile].totalNumWords)
-      if(result.asInstanceOf[ProcessedFile].onCompleteSignal){
-        //Terminate Actor System
-        textSystem.terminate()
-      }
-    }
-  }
+class Listener extends Actor {
+  private var totalNumberOfWords = 0
 
-  class Listener extends Actor {
-    private var totalNumberOfWords = 0
+  def receive = {
 
-    def receive = {
+    case CaptureStream(fileName, numOfWords, lineNumber) =>
+      totalNumberOfWords += numOfWords
+      println(fileName + " " + "L." + lineNumber + " " + numOfWords + " words")
 
-      case CaptureStream(fileName, numOfWords, lineNumber) =>
-                            totalNumberOfWords += numOfWords
-                            //println(fileName + " " + "L." + lineNumber + " " + numOfWords)
+    case closeStream(totalTime, fileName) =>
+      println("Stream Complete: " + fileName + " Total Number of Words: " + totalNumberOfWords + " Total Time: " + totalTime/1000000 + "ms")
 
-      case closeStream(totalTime, fileName) =>
-              println("Stream Complete: " + fileName + " Total Number of Words: " + totalNumberOfWords + " Total Time: " + totalTime/1000000 + "ms")
-
-      case _ => println("Error: message not recognized")
-    }
+    case _ => println("Error: message not recognized")
   }
 }
